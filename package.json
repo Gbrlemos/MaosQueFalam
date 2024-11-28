@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "@mediapipe/camera_utils": "^0.3.1675466862",
+    "@mediapipe/control_utils": "^0.6.1675466023",
+    "@mediapipe/drawing_utils": "^0.3.1675466124",
+    "@mediapipe/tasks-genai": "^0.10.17",
+    "@mediapipe/tasks-vision": "^0.10.18"
+  }
+}
