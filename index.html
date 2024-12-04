@@ -22,7 +22,14 @@
   </div>
 
   <script type="module">
-    import { detectEuTeAmo, detectOi, detectThankYou } from './gestos.js';
+    import { gestoEuTeAmo,
+             gestoOi,
+             gestoObrigado,
+             gestoSim,
+             gestoFamilia,
+             gestoCasa,
+             gestoDinheiro,
+             detectGestoStable } from './gestos.js';
 
     const videoElement = document.querySelector('.input_video');
     const canvasElement = document.querySelector('.output_canvas');
@@ -36,23 +43,24 @@
       canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
 
       if (results.multiHandLandmarks) {
-        for (const landmarks of results.multiHandLandmarks) {
-          drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS, { color: '#00FF00', lineWidth: 5 });
-          drawLandmarks(canvasCtx, landmarks, { color: '#FF0000', lineWidth: 2 });
+          const currentTime = Date.now(); // Timestamp atual
 
-          if (detectEuTeAmo(landmarks)) {
-            translationElement.textContent = 'Eu te amo';
-          } else if (detectOi(landmarks)) {
-            translationElement.textContent = 'Oi';
-          } else if (detectThankYou(landmarks, lastLandmarks)) {
-            translationElement.textContent = 'Obrigado';
-          } else {
-            translationElement.textContent = 'Aguardando gesto...';
+          for (const landmarks of results.multiHandLandmarks) {
+              drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS, { color: '#00FF00', lineWidth: 5 });
+              drawLandmarks(canvasCtx, landmarks, { color: '#FF0000', lineWidth: 2 });
+
+              // Chama a função para detectar e verificar se o gesto é estável
+              const detectedGesto = detectGestoStable(landmarks, currentTime);
+
+              if (detectedGesto) {
+                  translationElement.textContent = detectedGesto;
+                  console.log(`Gesto detectado: ${detectedGesto}`);
+              }
           }
-        }
       }
       canvasCtx.restore();
     }
+
 
     const hands = new Hands({
       locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`,
