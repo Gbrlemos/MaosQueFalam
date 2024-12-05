@@ -1,7 +1,7 @@
 // gestos.js
 
 
-// Função para detectar "Eu te amo"
+// Função para detectar "Amor"
 export function gestoAmor(landmarks) {
     const thumbUp = landmarks[4].y < landmarks[3].y;
     const indexUp = landmarks[8].y < landmarks[6].y;
@@ -22,18 +22,6 @@ export function gestoOi(landmarks) {
 }
 
 
-// Função para detectar "Sim"
-export function gestoSim(landmarks) {
-    const indicadorUp = landmarks[8].y < landmarks[6].y;  // Indicador levantado
-    const medioDown = landmarks[12].y > landmarks[10].y;  // Médio abaixado
-    const anelarDown = landmarks[16].y > landmarks[14].y; // Anelar abaixado
-    const mindinhoDown = landmarks[20].y > landmarks[18].y; // Mindinho abaixado
-    const polegarUp = landmarks[4].y < landmarks[3].y;  // Polegar levantado
-
-
-    // Para o gesto de "Sim", o indicador e o polegar devem estar levantados, e os outros dedos abaixados
-    return indicadorUp && medioDown && anelarDown && mindinhoDown && polegarUp;
-}
 
 
 // Função para detectar o gesto "A"
@@ -74,28 +62,32 @@ export function gestoB(landmarks) {
 
 // Função para detectar o gesto "C"
 export function gestoC(landmarks) {
-    const indicadorCurvado =
-        landmarks[8].y > landmarks[6].y && // Indicador curvado (não esticado)
-        Math.abs(landmarks[8].x - landmarks[6].x) < 0.1; // Proximidade (indicando curvatura)
-   
-    const medioCurvado =
-        landmarks[12].y > landmarks[10].y &&
-        Math.abs(landmarks[12].x - landmarks[10].x) < 0.1;
-   
-    const anelarCurvado =
-        landmarks[16].y > landmarks[14].y &&
-        Math.abs(landmarks[16].x - landmarks[14].x) < 0.1;
-   
-    const mindinhoCurvado =
-        landmarks[20].y > landmarks[18].y &&
-        Math.abs(landmarks[20].x - landmarks[18].x) < 0.1;
-   
-    const polegarAbaixo =
-        landmarks[4].y > landmarks[3].y && // Polegar mais baixo que a articulação anterior
-        landmarks[4].x < landmarks[8].x; // Polegar posicionado à esquerda dos outros dedos
+    const thresholdCurvatura = 0.2; // Limite para determinar a curvatura dos dedos
+    const thresholdOrientacao = 0.1; // Limite para verificar a inclinação lateral da mão
 
+    // Verifica se a mão está orientada de lado (maior variação em Z do que em X)
+    const orientacaoHorizontal = Math.abs(landmarks[0].z - landmarks[5].z) > thresholdOrientacao;
 
-    return indicadorCurvado && medioCurvado && anelarCurvado && mindinhoCurvado && polegarAbaixo;
+    // Verifica se os dedos indicador, médio, anelar e mindinho estão curvados (formando a curva do "C")
+    const indicadorCurvado = landmarks[8].x > landmarks[6].x && landmarks[8].y > landmarks[6].y;
+    const medioCurvado = landmarks[12].x > landmarks[10].x && landmarks[12].y > landmarks[10].y;
+    const anelarCurvado = landmarks[16].x > landmarks[14].x && landmarks[16].y > landmarks[14].y;
+    const mindinhoCurvado = landmarks[20].x > landmarks[18].x && landmarks[20].y > landmarks[18].y;
+
+    // Verifica a posição do polegar (aberto, mas formando o limite do "C")
+    const polegarCurvado =
+        Math.abs(landmarks[4].x - landmarks[2].x) > thresholdCurvatura && // Polegar afastado do indicador
+        Math.abs(landmarks[4].y - landmarks[8].y) < 0.2; // Próximo à altura do indicador
+
+    // Retorna verdadeiro se todos os critérios forem atendidos
+    return (
+        orientacaoHorizontal &&
+        indicadorCurvado &&
+        medioCurvado &&
+        anelarCurvado &&
+        mindinhoCurvado &&
+        polegarCurvado
+    );
 }
 
 
@@ -112,30 +104,39 @@ export function gestoD(landmarks) {
         landmarks[20].y > landmarks[18].y; // Mindinho dobrado
 
 
-    const polegarEncostado =
-        Math.abs(landmarks[4].x - landmarks[3].x) < 0.1 && // Polegar próximo à palma
-        landmarks[4].y > landmarks[3].y; // Polegar abaixado
 
 
-    return indicadorEsticado && outrosDobrados && polegarEncostado;
+
+    return indicadorEsticado && outrosDobrados;
 }
 
 
 // Função para detectar o gesto "E"
 export function gestoE(landmarks) {
-    const todosDobrados =
-        landmarks[8].y > landmarks[6].y && // Indicador dobrado
-        landmarks[12].y > landmarks[10].y && // Médio dobrado
-        landmarks[16].y > landmarks[14].y && // Anelar dobrado
-        landmarks[20].y > landmarks[18].y; // Mindinho dobrado
+    const thresholdCurvatura = 0.15; // Limite para definir se o dedo está dobrado
 
+    const indicadorDobrado =
+        landmarks[8].y > landmarks[6].y && // Indicador dobrado
+        Math.abs(landmarks[8].x - landmarks[6].x) < thresholdCurvatura;
+
+    const medioDobrado =
+        landmarks[12].y > landmarks[10].y && // Médio dobrado
+        Math.abs(landmarks[12].x - landmarks[10].x) < thresholdCurvatura;
+
+    const anelarDobrado =
+        landmarks[16].y > landmarks[14].y && // Anelar dobrado
+        Math.abs(landmarks[16].x - landmarks[14].x) < thresholdCurvatura;
+
+    const mindinhoDobrado =
+        landmarks[20].y > landmarks[18].y && // Mindinho dobrado
+        Math.abs(landmarks[20].x - landmarks[18].x) < thresholdCurvatura;
 
     const polegarEncostado =
         Math.abs(landmarks[4].x - landmarks[3].x) < 0.1 && // Polegar próximo à palma
         Math.abs(landmarks[4].y - landmarks[8].y) < 0.1; // Polegar encostando no indicador
 
-
-    return todosDobrados && polegarEncostado;
+    // Retorna verdadeiro apenas se todos os dedos estiverem dobrados
+    return indicadorDobrado && medioDobrado && anelarDobrado && mindinhoDobrado && polegarEncostado;
 }
 
 
@@ -155,9 +156,7 @@ export function detectGestoStable(landmarks, currentTime) {
 
 
         // Verifica qual gesto foi detectado
-        if (gestoSim(landmarks)) {
-            detectedGesto = "Sim";
-        } else if (gestoAmor(landmarks)) {
+        if (gestoAmor(landmarks)) {
             detectedGesto = "Amor";
         } else if (gestoOi(landmarks)) {
             detectedGesto = "Oi";

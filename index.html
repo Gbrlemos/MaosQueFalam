@@ -26,39 +26,33 @@
   <script type="module">
     import { gestoAmor,
              gestoOi,
-             gestoSim,
              gestoA,
              gestoB,
              gestoC,
              gestoD,
              gestoE,
              detectGestoStable } from './gestos.js';
-
-
+  
     const videoElement = document.querySelector('.input_video');
     const canvasElement = document.querySelector('.output_canvas');
     const canvasCtx = canvasElement.getContext('2d');
     const translationElement = document.getElementById('translation');
     let lastLandmarks = null;
-
-
+  
     // === Função para desenhar landmarks das mãos ===
     function onHandsResults(results) {
       canvasCtx.save();
       canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
       canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
-
-
+  
       if (results.multiHandLandmarks) {
         for (const landmarks of results.multiHandLandmarks) {
           drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS, { color: '#00FF00', lineWidth: 5 });
           drawLandmarks(canvasCtx, landmarks, { color: '#FF0000', lineWidth: 2 });
-
-
+  
           const currentTime = Date.now();
           const detectedGesto = detectGestoStable(landmarks, currentTime);
-
-
+  
           if (detectedGesto) {
             translationElement.textContent = detectedGesto;
             console.log(`Gesto detectado: ${detectedGesto}`);
@@ -67,23 +61,12 @@
       }
       canvasCtx.restore();
     }
-
-
-    // === Função para desenhar landmarks do rosto ===
+  
+    // === Função para lidar com Face Mesh (sem desenhar landmarks) ===
     function onFaceMeshResults(results) {
-      canvasCtx.save();
-      if (results.multiFaceLandmarks) {
-        for (const faceLandmarks of results.multiFaceLandmarks) {
-          drawConnectors(canvasCtx, faceLandmarks, FACEMESH_TESSELATION, { color: '#C0C0C070', lineWidth: 1 });
-          drawConnectors(canvasCtx, faceLandmarks, FACEMESH_RIGHT_EYE, { color: '#FF3030' });
-          drawConnectors(canvasCtx, faceLandmarks, FACEMESH_LEFT_EYE, { color: '#30FF30' });
-          drawConnectors(canvasCtx, faceLandmarks, FACEMESH_LIPS, { color: '#3030FF' });
-        }
-      }
-      canvasCtx.restore();
+      // Apenas processa os resultados, sem desenhar nada
     }
-
-
+  
     // === Configuração do Hands ===
     const hands = new Hands({
       locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`,
@@ -95,8 +78,7 @@
       minTrackingConfidence: 0.5,
     });
     hands.onResults(onHandsResults);
-
-
+  
     // === Configuração do Face Mesh ===
     const faceMesh = new FaceMesh({
       locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`,
@@ -108,8 +90,7 @@
       minTrackingConfidence: 0.5,
     });
     faceMesh.onResults(onFaceMeshResults);
-
-
+  
     // === Configuração da câmera para processar ambos ===
     const camera = new Camera(videoElement, {
       onFrame: async () => {
@@ -122,8 +103,6 @@
     });
     camera.start();
   </script>
+  
 </body>
 </html>
-
-
-
