@@ -1,40 +1,212 @@
-/* Centralização do conteúdo e estilo da página */
 body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    background-color: #f4f4f4;
-  }
-  
-  .container {
-    position: relative;
-    width: 1280px;
-    height: 720px;
-  }
-  
-  .input_video {
-    display: none; /* Oculta o elemento de vídeo */
-  }
-  
-  .output_canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-  }
-  
-  /* Estilo para a tradução */
-  #translation {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 24px;
-    color: white;
-    background-color: rgba(0, 0, 0, 0.6);
-    padding: 10px;
-    border-radius: 5px;
-    text-align: center;
-  }
-  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  background-color: #f4f4f4;
+}
+
+.container {
+  position: relative;
+  width: 1280px;
+  height: 720px;
+}
+
+.input_video {
+  display: none; /* Oculta o elemento de vídeo */
+}
+
+.output_canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* Estilo para a tradução */
+#translation {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 24px;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+
+/* Definindo as cores principais */
+:root {
+--goldenrod: #DAA520;
+--darkGoldenrod: #B8860B;
+--saddleBrown: #8B4513;
+--background-color: #f4f4f4;
+--text-color: #333;
+}
+
+/* Estilo do Body */
+body {
+font-family: Arial, sans-serif;
+background-color: var(--background-color);
+color: var(--text-color);
+margin: 0;
+padding: 0;
+display: flex;
+justify-content: center;
+align-items: center;
+height: 100vh;
+}
+
+/* Container */
+.container {
+width: 100%;
+max-width: 4000px;
+padding: 70px;
+background-color: white;
+border-radius: 10px;
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+z-index: 1;
+}
+
+.login {
+  z-index: 2;
+}
+
+/* Cabeçalho */
+h1 {
+text-align: center;
+color: var(--saddleBrown);
+}
+
+/* Estilo dos campos de entrada */
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+width: calc(100% - 20px);
+padding: 10px;
+margin: 10px 0;
+border: 1px solid #ccc;
+border-radius: 5px;
+font-size: 1rem;
+}
+
+/* Botões */
+button {
+padding: 10px 30px;
+margin: 15px 5px;
+font-size: 1rem;
+background-color: var(--goldenrod);
+color: white;
+border: none;
+border-radius: 5px;
+cursor: pointer;
+}
+
+button:hover {
+background-color: var(--darkGoldenrod);
+}
+
+button#logoutButton {
+background-color: var(--saddleBrown);
+}
+
+button#logoutButton:hover {
+background-color: #7a381b; /* Um tom mais escuro de SaddleBrown */
+}
+
+button#backToLoginButton {
+width: 100%; /* Faz com que o botão ocupe toda a largura do container */
+padding: 10px 30px; /* Ajuste do padding para melhorar o tamanho */
+background-color: var(--darkGoldenrod);
+color: white;
+border: none;
+border-radius: 5px;
+cursor: pointer;
+margin-top: 20px; /* Espaçamento superior para separar do conteúdo anterior */
+}
+
+button#backToLoginButton:hover {
+background-color: var(--goldenrod); /* Altera a cor de fundo quando o botão for clicado */
+}
+
+
+
+/* Regras de senha */
+#passwordRules {
+font-size: 0.9rem;
+color: var(--saddleBrown);
+margin-bottom: 20px;
+text-align: center;
+}
+
+/* Mensagens de erro */
+#error,
+#registerError {
+color: red;
+text-align: center;
+}
+
+/* Tela de Bem-vindo */
+#welcome {
+text-align: center;
+}
+
+/* Tela de Registro */
+#register {
+display: none;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+width: 100%;
+padding: 10px;
+margin: 10px 0;
+border: 1px solid var(--saddleBrown);
+border-radius: 5px;
+font-size: 1rem;
+}
+
+button#registerSubmitButton {
+width: 100%; /* Faz com que o botão ocupe toda a largura do container */
+padding: 10px 30px; /* Ajuste do padding para melhorar o tamanho */
+background-color: var(--darkGoldenrod);
+color: white;
+border: none;
+border-radius: 5px;
+cursor: pointer;
+}
+
+button#registerSubmitButton:hover {
+background-color: var(--goldenrod); /* Altera a cor de fundo quando o botão for clicado */
+}
+
+
+/* Layout de login */
+#login {
+display: block;
+text-align: center;
+}
+
+#login input {
+width: 80%;
+margin: 5px;
+}
+
+button#loginButton {
+width: 80%;
+background-color: var(--goldenrod);
+}
+
+button#registerButton {
+width: 80%;
+background-color: var(--darkGoldenrod);
+}
+
+button#registerButton:hover,
+button#loginButton:hover {
+background-color: var(--saddleBrown);
+}

@@ -14,12 +14,39 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
+  <!-- Seção de Login/Registro -->
+  <div class="login" id="login" style="display: block;">
+    <h2>Login</h2>
+    <input type="email" id="email" placeholder="Email" />
+    <input type="password" id="password" placeholder="Senha" />
+    <button id="loginButton">Login</button>
+    <p id="error"></p>
+    <button id="registerButton">Registrar</button>
+  </div>
+
+  <div class="login" id="register" style="display: none;">
+    <h2>Registrar</h2>
+    <input type="text" id="name" placeholder="Nome" />
+    <input type="email" id="registerEmail" placeholder="Email" />
+    <input type="password" id="registerPassword" placeholder="Senha" />
+    <button id="registerSubmitButton">Registrar</button>
+    <p id="registerError"></p>
+    <button id="backToLoginButton">Voltar para Login</button>
+  </div>
+
+  <!-- Seção de Boas-Vindas (aparece após o login) -->
+  <div id="welcome" style="display: none;">
+    <h2>Bem-vindo!</h2>
+    <button id="logoutButton">Logout</button>
+  </div>
+
+  <!-- Seção de Câmera e Gestos (oculta até o login) -->
+  <div class="container" id="cameraSection" style="display: none;">
     <video class="input_video" autoplay></video>
     <canvas class="output_canvas" width="1280" height="720"></canvas>
-  </div>
-  <div id="translation">
-    Aguardando gesto...
+    <div class="traducao" id="translation">
+      Aguardando gesto...
+    </div>
   </div>
 
 
@@ -32,27 +59,27 @@
              gestoD,
              gestoE,
              detectGestoStable } from './gestos.js';
-  
+
     const videoElement = document.querySelector('.input_video');
     const canvasElement = document.querySelector('.output_canvas');
     const canvasCtx = canvasElement.getContext('2d');
     const translationElement = document.getElementById('translation');
     let lastLandmarks = null;
-  
+
     // === Função para desenhar landmarks das mãos ===
     function onHandsResults(results) {
       canvasCtx.save();
       canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
       canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
-  
+
       if (results.multiHandLandmarks) {
         for (const landmarks of results.multiHandLandmarks) {
           drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS, { color: '#00FF00', lineWidth: 5 });
           drawLandmarks(canvasCtx, landmarks, { color: '#FF0000', lineWidth: 2 });
-  
+
           const currentTime = Date.now();
           const detectedGesto = detectGestoStable(landmarks, currentTime);
-  
+
           if (detectedGesto) {
             translationElement.textContent = detectedGesto;
             console.log(`Gesto detectado: ${detectedGesto}`);
@@ -61,12 +88,12 @@
       }
       canvasCtx.restore();
     }
-  
+
     // === Função para lidar com Face Mesh (sem desenhar landmarks) ===
     function onFaceMeshResults(results) {
       // Apenas processa os resultados, sem desenhar nada
     }
-  
+
     // === Configuração do Hands ===
     const hands = new Hands({
       locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`,
@@ -78,7 +105,7 @@
       minTrackingConfidence: 0.5,
     });
     hands.onResults(onHandsResults);
-  
+
     // === Configuração do Face Mesh ===
     const faceMesh = new FaceMesh({
       locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`,
@@ -90,7 +117,7 @@
       minTrackingConfidence: 0.5,
     });
     faceMesh.onResults(onFaceMeshResults);
-  
+
     // === Configuração da câmera para processar ambos ===
     const camera = new Camera(videoElement, {
       onFrame: async () => {
@@ -101,8 +128,73 @@
       width: 1280,
       height: 720,
     });
-    camera.start();
+
+    // Armazena os dados de registro (simulando o banco de dados)
+    let registeredUsers = [];
+
+    // Função de login
+    document.getElementById('loginButton').addEventListener('click', function() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      const user = registeredUsers.find(u => u.email === email && u.password === password);
+
+      if (user) {
+        // Esconde a tela de login
+        document.getElementById('login').style.display = 'none';
+        // Exibe a seção de boas-vindas
+        document.getElementById('welcome').style.display = 'block';
+        // Exibe a câmera
+        document.getElementById('cameraSection').style.display = 'block';
+        // Inicia a câmera
+        camera.start();
+      } else {
+        document.getElementById('error').textContent = "Credenciais inválidas!";
+      }
+    });
+
+    // Função de logout
+    document.getElementById('logoutButton').addEventListener('click', function() {
+      // Esconde a seção de boas-vindas e câmera
+      document.getElementById('welcome').style.display = 'none';
+      document.getElementById('cameraSection').style.display = 'none';
+      // Exibe a tela de login
+      document.getElementById('login').style.display = 'block';
+    });
+
+    // Função de registrar novo usuário
+    document.getElementById('registerButton').addEventListener('click', function() {
+      // Esconde a tela de login
+      document.getElementById('login').style.display = 'none';
+      // Exibe a tela de registro
+      document.getElementById('register').style.display = 'block';
+    });
+
+    // Função de enviar registro
+    document.getElementById('registerSubmitButton').addEventListener('click', function() {
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('registerEmail').value;
+      const password = document.getElementById('registerPassword').value;
+
+      // Simulação de registro (substitua com lógica de registro real)
+      if (name && email && password) {
+        registeredUsers.push({ name, email, password }); // Adiciona o usuário registrado
+        document.getElementById('registerError').textContent = "Registrado com sucesso!";
+        // Após registro, volta para a tela de login
+        setTimeout(function() {
+          document.getElementById('register').style.display = 'none';
+          document.getElementById('login').style.display = 'block';
+        }, 2000);
+      } else {
+        document.getElementById('registerError').textContent = "Por favor, preencha todos os campos.";
+      }
+    });
+
+    // Voltar para tela de login
+    document.getElementById('backToLoginButton').addEventListener('click', function() {
+      document.getElementById('register').style.display = 'none';
+      document.getElementById('login').style.display = 'block';
+    });
   </script>
-  
 </body>
 </html>
