@@ -44,3 +44,18 @@ O objetivo do projeto é facilitar a comunicação entre pessoas surdas e ouvint
    git clone https://github.com/Gbrlemos/MaosQueFalam.git
 
 2. Use a extensão 'Live' no VSCode para executar o arquivo HTML.
+
+---
+
+
+📖 Sobre o Projeto
+Este projeto foi desenvolvido como parte do TCC do curso Técnico em Desenvolvimento de Sistemas no Senai Lauro de Freitas, com o objetivo de criar uma solução para promover a inclusão e facilitar a comunicação entre pessoas surdas e ouvintes.
+
+📜 Licença
+Este projeto está sob a licença MIT.
+
+📧 Contato
+Caso queira saber mais sobre o projeto ou entrar em contato comigo:
+
+E-mail: gabi.slemos@gmail.com
+LinkedIn: www.linkedin.com/in/gbrlemos
