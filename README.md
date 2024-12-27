@@ -51,6 +51,13 @@ O objetivo do projeto é facilitar a comunicação entre pessoas surdas e ouvint
 📖 Sobre o Projeto
 Este projeto foi desenvolvido como parte do TCC do curso Técnico em Desenvolvimento de Sistemas no Senai Lauro de Freitas, com o objetivo de criar uma solução para promover a inclusão e facilitar a comunicação entre pessoas surdas e ouvintes.
 
+---
+
+📸 Demonstração do Protótipo
+![GestosPrototipoMQF](https://github.com/user-attachments/assets/8c0922dd-1f52-4204-9e4b-fe2af1306464)
+
+
+---
 📜 Licença
 Este projeto está sob a licença MIT.
 
