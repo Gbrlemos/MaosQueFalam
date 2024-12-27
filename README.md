@@ -53,7 +53,8 @@ Este projeto foi desenvolvido como parte do TCC do curso Técnico em Desenvolvim
 
 ---
 
-📸 Demonstração do Protótipo
+📸 Gestos para o protótipo
+
 ![GestosPrototipoMQF](https://github.com/user-attachments/assets/8c0922dd-1f52-4204-9e4b-fe2af1306464)
 
 
